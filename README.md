@@ -87,7 +87,7 @@ print("Brave User Agent:", user_agent_string)
 downloader = Downloader(user_agent=user_agent_string, cookies=all_required_cookies, parallel=1)
 
 # Download HTML content
-url_html = "[https://example.com](https://example.com)"
+url_html = "https://example.com"
 try:
     html_content = downloader.get_html(url_html)
     print(f"Downloaded HTML from {url_html}:")
