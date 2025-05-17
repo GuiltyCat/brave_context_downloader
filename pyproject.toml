@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools"] 
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brave_context_downloader"
+version = "0.0.1"
+readme = "README.md"
+authors = [
+    { name = "GuiltyCat", email = "" },
+]
+description = "A downloader for brave context"
+
+dependencies = [
+    "requests",
+    "selenium",
+    "PyCryptodome",
+]
+
+[tool.setuptools.packages.find]
+where = ["brave_context_downloader"]
