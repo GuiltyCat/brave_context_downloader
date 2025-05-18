@@ -6,9 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "brave_context_downloader"
 version = "0.0.1"
 readme = "README.md"
-authors = [
-    { name = "GuiltyCat", email = "" },
-]
 description = "A downloader for brave context"
 
 dependencies = [
