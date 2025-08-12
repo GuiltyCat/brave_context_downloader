@@ -3,7 +3,6 @@ from pathlib import Path
 import shutil
 import sqlite3
 import hashlib
-import subprocess
 
 from Cryptodome.Cipher import AES
 
