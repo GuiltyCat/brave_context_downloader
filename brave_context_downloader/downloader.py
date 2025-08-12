@@ -13,11 +13,12 @@ from selenium.webdriver.chrome.options import Options
 
 
 class Cookie:
-    def __init__(self,
-                 cookie_path="~/.config/BraveSoftware/Brave-Browser/Default/Cookies",
-                 tmp_cookie_path="/tmp/brave_cookies.sqlite"):
-        self.cookie_path = Path(
-            cookie_path).expanduser()
+    def __init__(
+        self,
+        cookie_path="~/.config/BraveSoftware/Brave-Browser/Default/Cookies",
+        tmp_cookie_path="/tmp/brave_cookies.sqlite",
+    ):
+        self.cookie_path = Path(cookie_path).expanduser()
         self.tmp_cookie_db = Path(tmp_cookie_path)
         self.key = hashlib.pbkdf2_hmac("sha1", b"peanuts", b"saltysalt", 1, 16)
         pass
@@ -32,8 +33,9 @@ class Cookie:
                 encrypted_value = encrypted_value[3:]
                 cipher = AES.new(key, AES.MODE_CBC, iv)
                 decrypted_with_pad = cipher.decrypt(encrypted_value)
-                decrypted = decrypted_with_pad[: -
-                                               self.compat_ord(decrypted_with_pad[-1])]
+                decrypted = decrypted_with_pad[
+                    : -self.compat_ord(decrypted_with_pad[-1])
+                ]
                 return decrypted[32:].decode("utf-8")
             elif encrypted_value[:3] == b"v11":  # v11 uses AES-GCM
                 raise Exception("v11 is not supported yet.")
@@ -90,37 +92,16 @@ class UserAgent:
 class Downloader:
     def __init__(self, user_agent: str, cookies: dict[str, str], parallel: int):
         self.cookies = cookies
-        self.user_agent = user_agent
+        self.headers = {"User-Agent": user_agent}
         self.parallel = parallel
 
     def get_html(self, url: str):
-        # download html by wget
-        res = subprocess.run(
-            [
-                "wget",
-                url,
-                "-q",
-                "-O",
-                "-",
-                "--user-agent",
-                self.user_agent,
-                "--header",
-                "cookie: " + "; ".join(f"{k}={v}" for k,
-                                       v in self.cookies.items()),
-            ],
-            stdout=subprocess.PIPE,
-            text=True,
-            encoding="utf-8",
-            check=True,
-            env={"WGETRC": Path("~/.wgetrc").expanduser()},
-        )
-        # read from stdout
-        html = res.stdout
+        res = requests.get(url, headers=self.headers, cookies=self.cookies)
+        html = res.text
         return html
 
     def get_file(self, url: str, save_dir: Path):
-        headers = {"User-Agent": self.user_agent}
-        res = requests.get(url, data=headers, cookies=self.cookies)
+        res = requests.get(url, headers=self.headers, cookies=self.cookies)
         file_name = Path(url).name
         with open(save_dir / file_name, "wb") as f:
             f.write(res.content)
