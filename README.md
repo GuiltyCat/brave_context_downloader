@@ -26,7 +26,9 @@ You can install the Python dependencies using pip:
 
 ```bash
 pip install requests pycryptodomex selenium
-````
+```
+
+and install chromedriver before.
 
 -----
 
